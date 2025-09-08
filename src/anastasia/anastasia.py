@@ -4,6 +4,90 @@ import copy
 from contextlib import contextmanager
 import sys
 
+class TemporalValue:
+    """
+    A wrapper class that behaves like the actual value but also provides
+    the set_snapshot method.
+    """
+    def __init__(self, value, descriptor):
+        self._value = value
+        self._descriptor = descriptor
+    
+    def set_snapshot(self, value=None):
+        """
+        Updates the value and explicitly saves a new snapshot at the current time.
+        """
+        if value is None:
+            value = self._value
+        return self._descriptor.set_snapshot(value)
+    
+    def __str__(self):
+        return str(self._value)
+    
+    def __repr__(self):
+        return repr(self._value)
+    
+    def __eq__(self, other):
+        return self._value == other
+    
+    def __ne__(self, other):
+        return self._value != other
+    
+    def __lt__(self, other):
+        return self._value < other
+    
+    def __le__(self, other):
+        return self._value <= other
+    
+    def __gt__(self, other):
+        return self._value > other
+    
+    def __ge__(self, other):
+        return self._value >= other
+    
+    def __add__(self, other):
+        return self._value + other
+    
+    def __radd__(self, other):
+        return other + self._value
+    
+    def __sub__(self, other):
+        return self._value - other
+    
+    def __rsub__(self, other):
+        return other - self._value
+    
+    def __mul__(self, other):
+        return self._value * other
+    
+    def __rmul__(self, other):
+        return other * self._value
+    
+    def __truediv__(self, other):
+        return self._value / other
+    
+    def __rtruediv__(self, other):
+        return other / self._value
+    
+    def __floordiv__(self, other):
+        return self._value // other
+    
+    def __rfloordiv__(self, other):
+        return other // self._value
+    
+    def __mod__(self, other):
+        return self._value % other
+    
+    def __rmod__(self, other):
+        return other % self._value
+    
+    def __pow__(self, other):
+        return self._value ** other
+    
+    def __rpow__(self, other):
+        return other ** self._value
+
+
 class TemporalAttribute:
     """
     A descriptor class that manages the value and snapshot history for a
@@ -35,6 +119,9 @@ class TemporalAttribute:
             # This is a class-level access, so return the descriptor itself.
             return self
 
+        # Store reference to instance for set_snapshot method
+        self._instance = instance
+        
         # Safely access the global as_of_timestamp without infinite recursion
         timestamp = owner.as_of_timestamp
 
@@ -53,8 +140,8 @@ class TemporalAttribute:
                 initial_value = self._initial_value_func(instance)
                 self.set_snapshot(initial_value)
 
-            # Return the live value
-            return self._current_value
+            # Return the wrapped value that provides both value access and set_snapshot method
+            return TemporalValue(self._current_value, self)
 
     def __set__(self, instance, value):
         """
