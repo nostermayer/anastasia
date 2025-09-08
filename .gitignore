@@ -142,3 +142,6 @@ dmypy.json
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+# Project files
+CLAUDE.md

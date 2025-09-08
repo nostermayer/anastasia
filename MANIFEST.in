@@ -1,0 +1,32 @@
+# Include documentation and configuration files
+include README.md
+include LICENSE
+include CHANGELOG.md
+include pyproject.toml
+include requirements.txt
+include requirements-dev.txt
+include pytest.ini
+include .coveragerc
+include CLAUDE.md
+include prompt.md
+
+# Include test files
+recursive-include tests *.py
+
+# Include package data
+recursive-include src/anastasia *.py
+
+# Exclude development and build files
+exclude .gitignore
+exclude run_tests.py
+exclude main.py
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+recursive-exclude * *.so
+recursive-exclude * .DS_Store
+recursive-exclude htmlcov *
+recursive-exclude .coverage *
+recursive-exclude .pytest_cache *
+recursive-exclude .mypy_cache *
+recursive-exclude venv *
+recursive-exclude .venv *

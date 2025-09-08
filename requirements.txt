@@ -1,2 +1,3 @@
-# Core dependencies
-# Add your project dependencies here
+# Core runtime dependencies
+# The Anastasia framework uses only standard library modules
+# No external dependencies required for core functionality
